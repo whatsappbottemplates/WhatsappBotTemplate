@@ -11,6 +11,11 @@ global.settings = {
   isAdultSearchEnable: false,
   rejectCalls: true,
 
+  antiCheckers: {
+    antiCallRejecter: true,
+    antiSpamHandler: true,
+  },
+
   // Other settings...
   defaultLanguage: 'en',
   defaultTimezone: 'Asia/Colombo',
