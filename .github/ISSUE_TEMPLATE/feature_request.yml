@@ -15,7 +15,7 @@ body:
       label: What should we call this feature? 🏷️💭
       description: Give your feature a short, descriptive name. 📝👌
     validations:
-      required: true ✅
+      required: true
   - type: textarea
     id: description
     attributes:
@@ -23,7 +23,7 @@ body:
       description: Explain what the feature does and why it would be awesome to have. 🌈😃
       placeholder: "This feature would allow the bot to... 🤖💬"
     validations:
-      required: true ✅
+      required: true
   - type: textarea
     id: use-case
     attributes:
@@ -44,15 +44,13 @@ body:
         - Nice to have 😊
         - Pretty important 🙌
         - Absolutely essential 🔥
-    validations:
-      required: false ❓
   - type: checkboxes
     id: terms
     attributes:
       label: Code of Conduct 📜🤝
       options:
         - label: I agree to follow the project's Code of Conduct 🤓✅
-          required: true ✔️
+          required: true
   - type: markdown
     attributes:
       value: |
