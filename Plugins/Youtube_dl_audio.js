@@ -35,7 +35,7 @@ module.exports = {
 
             const input = args.join(' ');
             let videoID;
-            await sock.sendMessage(remoteJid, { react: { text: '🔎', key: m.key } }); // Error reaction
+            await sock.sendMessage(m.key.remoteJid, { react: { text: '🔎', key: m.key } }); // Error reaction
             if (input.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|v\/|embed\/|watch\?v=))([\w-]{11})/)) {
                 videoID = getVideoIdFromUrl(input);
             } else {
@@ -65,7 +65,7 @@ module.exports = {
                 return;
             }
             const audioStream = ytdl(video_url, { format: videoFormat });
-            await sock.sendMessage(remoteJid, { react: { text: '⬇️', key: m.key } }); // Error reaction
+            await sock.sendMessage(m.key.remoteJid, { react: { text: '⬇️', key: m.key } }); // Error reaction
             const sanitizedFileName = sanitizeFilename(title); // Sanitize the title for use as the file name
             const filePath = `./temp/${sanitizedFileName}.mp3`;
             const tempDirPath = './temp';
@@ -93,7 +93,7 @@ module.exports = {
 📚 *Category*: ${category}
 💽 *Audio Size*: ${videoFormat.contentLength ? (videoFormat.contentLength / (1024 * 1024)).toFixed(2) + ' MB' : 'Unknown'}
 `;
-                await sock.sendMessage(remoteJid, { react: { text: '⬆️', key: m.key } }); // Error reaction
+                await sock.sendMessage(m.key.remoteJid, { react: { text: '⬆️', key: m.key } }); // Error reaction
                 // Check if file exists before sending
                 if (fs.existsSync(audioFilePath)) {
                     await sock.sendMessage(
@@ -107,7 +107,7 @@ module.exports = {
                         { quoted: m }
                     );
                     fs.unlinkSync(audioFilePath);
-                    await sock.sendMessage(remoteJid, { react: { text: '✅', key: m.key } }); // Error reaction
+                    await sock.sendMessage(m.key.remoteJid, { react: { text: '✅', key: m.key } }); // Error reaction
                 } else {
                     throw new Error('File not found or could not be read.');
                 }
