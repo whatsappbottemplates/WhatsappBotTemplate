@@ -1,0 +1,80 @@
+name: 🐞 Report a Bug
+description: Help us improve by reporting issues you've found
+title: "[Bug]: "
+labels: ["bug"]
+assignees:
+  - hacxk  # Replace with your actual GitHub username or team name
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        👋 Hey there! Thanks for taking the time to report a bug in our WhatsApp bot. 
+        We really appreciate your help in making it even better! 😊
+
+        To help us get this fixed as quickly as possible, please fill out the details below.
+
+  - type: input
+    id: version
+    attributes:
+      label: Bot Version
+      description: Which version of the HacxK bot are you using? (e.g., v1.4.0)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device
+      description: Which device are you using?
+      options:
+        - Android
+        - iOS
+        - Web (WhatsApp Web/Desktop)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: What's going wrong?
+      description: Please describe the problem you encountered. Be as specific as possible! 
+      placeholder: "The bot doesn't respond to commands."  "I get an error message when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we see it too?
+      description: If possible, provide steps on how we can reproduce this bug.
+      placeholder: |
+        1. Type the command...
+        2. Send the message...
+        3. Observe the bot's behavior...
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen instead?
+      description: Describe what you expected to see.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else we should know?
+      description: Additional information (e.g., screenshots, error logs, device model, etc.)
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow the project's Code of Conduct
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        🙏 Thanks again for your help! We'll get on this as soon as we can. 
