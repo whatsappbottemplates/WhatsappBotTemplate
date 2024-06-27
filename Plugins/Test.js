@@ -1,60 +1,134 @@
-const { generateMessageID, proto } = require('@whiskeysockets/baileys');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
-  usage: ['te'],
-  description: 'Test Before Commit to main',
-  emoji: '💖',
+  usage: ['settings', 'config'],
+  description: 'View or update specific bot settings',
+  emoji: '⚙️',
   commandType: 'Admin',
   isWorkAll: true,
-  async execute(sock, m) {
-    try {
-      // Generate a unique message ID
-      const id = await generateMessageID();
+  async execute(sock, m, args) {
+   
+  },
+};
 
-      // Create the button message
-      const message = {
-        buttons: [
-          { buttonId: 'id1', buttonText: { displayText: 'Button 1' } },
-          { buttonId: 'id2', buttonText: { displayText: 'Button 2' } }
-        ],
-        text: 'This is a test button message',
-        footer: 'Footer text'
-      };
 
-      let buttonsMessage = {};
+// Define the path to the file containing the code
+const filePath = path.join(__dirname, '../Settings.js');
 
-      if ('buttons' in message && !!message.buttons) {
-        buttonsMessage = {
-          buttons: message.buttons.map(b => ({ 
-            ...b, 
-            type: proto.Message.ButtonsMessage.Button.Type.RESPONSE 
-          }))
-        };
+// Read the contents of the file
+fs.readFile(filePath, 'utf8', (err, data) => {
+  if (err) {
+    console.error('Error reading file:', err);
+    return;
+  }
 
-        if ('text' in message) {
-          buttonsMessage.contentText = message.text;
-          buttonsMessage.headerType = 1; // Assuming 1 is equivalent to ButtonType.EMPTY
+  // Extract the global objects from the code
+  const globalObjects = extractGlobalsFromJS(data);
+
+  // Display the object names and their values
+  for (const objectName in globalObjects) {
+    if (globalObjects.hasOwnProperty(objectName)) {
+      printObject(globalObjects[objectName], 0);
+    }
+  }
+});
+
+// Function to extract global objects from JavaScript code
+function extractGlobalsFromJS(jsCode) {
+    const globals = {};
+    const globalVarRegex = /global\.(.*?)\s*=\s*(.*?);/gs;
+    let match;
+    const assignments = [];
+  
+    while ((match = globalVarRegex.exec(jsCode)) !== null) {
+      const key = match[1].trim();
+      const value = parseValue(eval(match[2]));
+      assignments.push({ key, value });
+    }
+  
+    for (const { key, value } of assignments) {
+      const keys = key.split('.');
+      let currentObj = globals;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const k = keys[i];
+        if (!currentObj[k]) {
+          currentObj[k] = {};
         }
+        currentObj = currentObj[k];
+      }
+      currentObj[keys[keys.length - 1]] = value;
+    }
+  
+    return globals;
+}
 
-        if ('footer' in message && !!message.footer) {
-          buttonsMessage.footerText = message.footer;
+// Function to parse values and handle different data types
+function parseValue(value) {
+  if (Array.isArray(value)) {
+    return value.map(parseValue);
+  } else if (typeof value === 'object' && value !== null) {
+    const parsedObj = {};
+    for (const key in value) {
+      if (value.hasOwnProperty(key)) {
+        parsedObj[key] = parseValue(value[key]);
+      }
+    }
+    return parsedObj;
+  } else {
+    return value;
+  }
+}
+
+// Function to print an object with proper indentation
+function printObject(obj, indent) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key];
+      if (typeof value === 'object') {
+        printObject(value, indent + 1);
+      } else {
+      }
+    }
+  }
+}
+
+function saveChanges(updatedSettings) {
+  try {
+    // Read the contents of the config.js file
+    const filePath = path.join(__dirname, '../Settings.js');
+    fs.readFile(filePath, 'utf8', (readErr, configCode) => {
+      if (readErr) {
+        throw readErr;
+      }
+
+      // Update the values in the config code
+      for (const fieldName in updatedSettings) {
+        if (updatedSettings.hasOwnProperty(fieldName)) {
+          // Parse field name to extract object path and property name
+          const [objectName, propertyName] = fieldName.split(':');
+
+          // Construct regex to match the property assignment
+          const regex = new RegExp(`global\\.${objectName}\\.${propertyName}\\s*=\\s*(.*?);`, 'g');
+
+          // Construct replacement string with the updated value
+          const replacement = `global.${objectName}.${propertyName} = ${JSON.stringify(updatedSettings[fieldName])};`;
+
+          // Perform the replacement
+          configCode = configCode.replace(regex, replacement);
         }
       }
 
-      const buttonMessage = {
-        message: {
-          buttonsMessage: proto.Message.ButtonsMessage.fromObject(buttonsMessage)
+      // Write the modified config code back to the file
+      fs.writeFile(filePath, configCode, (writeErr) => {
+        if (writeErr) {
+          throw writeErr;
         }
-      };
 
-      // Send the button message
-      await sock.relayMessage(m.key.remoteJid, buttonMessage, { messageId: id });
-
-      // Confirmation message
-      await sock.sendMessage(m.key.remoteJid, { text: '✅ Test button message sent.' }, { quoted: m });
-    } catch (error) {
-      console.error('Error sending test message:', error);
-      await sock.sendMessage(m.key.remoteJid, { text: '❌ Failed to send test message.' }, { quoted: m });
-    }
+        console.log('Settings updated successfully:', updatedSettings);
+      });
+    });
+  } catch (error) {
+    console.error('Error saving changes:', error);
   }
-};
+}

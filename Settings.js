@@ -5,8 +5,8 @@ global.settings = {
   workMode: 'Public',
 
   maxDownloadSize: 50, // 50 MB download limit in bytes
-  blockedKeywords: ['badword1', 'badword2', 'inappropriate'], // Add more keywords as needed
-  deleteBadWords: true, // Enable/disable bad word deletion
+  blockedKeywords: ['', '', ''], // Add more keywords as needed
+  deleteBadWords: false, // Enable/disable bad word deletion
   isHackEnable: true,
   isAdultSearchEnable: false,
   rejectCalls: true,
