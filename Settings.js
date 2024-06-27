@@ -14,6 +14,7 @@ global.settings = {
   antiCheckers: {
     antiCallRejecter: true,
     antiSpamHandler: true,
+    sendWelcome: true,
   },
 
   // Other settings...
