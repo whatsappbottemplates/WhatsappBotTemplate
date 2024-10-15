@@ -1,7 +1,7 @@
 global.settings = {
   botName: '𝐇𝐀𝐂𝐗𝐊',
-  ownerNames: ['𝐙𝐀𝐈𝐃 𝐌𝐎𝐇𝐀𝐌𝐄𝐃'], // Array of owner names/usernames
-  ownerNumbers: ['4234234', '4234234234'], // Array of owner phone numbers (with country code)
+  ownerNames: ['Udavin'], // Array of owner names/usernames
+  ownerNumbers: ['94761192103', '9475900210','94722777000'], // Array of owner phone numbers (with country code)
   workMode: 'Public',
 
   maxDownloadSize: 50, // 50 MB download limit in bytes
